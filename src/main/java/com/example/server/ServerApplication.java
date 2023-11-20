@@ -14,7 +14,6 @@ public class ServerApplication {
 		try {
 			ftpServer.startServer();
 		} catch (FtpException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

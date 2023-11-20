@@ -41,10 +41,10 @@ public class Server {
 
     static void createUser(UserManager userManager) throws FtpException {
         var user = new BaseUser();
-        user.setName("user");
-        user.setPassword("12");
+        user.setName("admin");
+        user.setPassword("admin");
         user.setHomeDirectory("E:\\");
-        user.b12s9ii8xi(List.of(new WritePermission(), new ConcurrentLoginPermission(10, 10)));
+        user.setAuthorities(List.of(new WritePermission(), new ConcurrentLoginPermission(10, 10)));
         user.setEnabled(true);
         userManager.save(user);
     }
