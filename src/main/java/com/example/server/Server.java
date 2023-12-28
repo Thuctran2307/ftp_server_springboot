@@ -22,18 +22,17 @@ public class Server {
     void startServer() throws FtpException {
 
         factory.setPort(21);
-        factory.setServerAddress("localhost");
+        factory.setServerAddress("localhost");  
+        
 
         serverFactory.addListener("default", factory.createListener());
-
+        
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(System.getProperty("user.dir") + "/src/main/resources/users.properties"));
         UserManager userManager = userManagerFactory.createUserManager();
         createUser(userManager);
         serverFactory.setUserManager(userManager);
-
-
         server = serverFactory.createServer();
         server.start();
 
@@ -43,7 +42,7 @@ public class Server {
         var user = new BaseUser();
         user.setName("admin");
         user.setPassword("admin");
-        user.setHomeDirectory("E:\\");
+        user.setHomeDirectory("E:\\FTP");
         user.setAuthorities(List.of(new WritePermission(), new ConcurrentLoginPermission(10, 10)));
         user.setEnabled(true);
         userManager.save(user);
