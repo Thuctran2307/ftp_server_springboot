@@ -2,6 +2,8 @@ package com.example.server;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class Server {
     FtpServerFactory serverFactory = new FtpServerFactory();
     ListenerFactory factory = new ListenerFactory();
+
     FtpServer server = null;
     void startServer() throws FtpException {
 
@@ -30,6 +33,7 @@ public class Server {
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(System.getProperty("user.dir") + "/src/main/resources/users.properties"));
+        
         UserManager userManager = userManagerFactory.createUserManager();
         createUser(userManager);
         serverFactory.setUserManager(userManager);
@@ -40,11 +44,15 @@ public class Server {
 
     static void createUser(UserManager userManager) throws FtpException {
         var user = new BaseUser();
-        user.setName("admin");
-        user.setPassword("admin");
-        user.setHomeDirectory("E:\\FTP");
+        user.setName("user");
+        user.setPassword("user");
+        user.setHomeDirectory("\\");
         user.setAuthorities(List.of(new WritePermission(), new ConcurrentLoginPermission(10, 10)));
         user.setEnabled(true);
         userManager.save(user);
+    }
+
+    public boolean downLoadFile(String remotePath, String fileName, String localPath) {
+        return false;
     }
 }
