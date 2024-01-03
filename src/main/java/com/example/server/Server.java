@@ -2,8 +2,6 @@ package com.example.server;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -18,41 +16,34 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Server {
-    FtpServerFactory serverFactory = new FtpServerFactory();
+    public FtpServerFactory serverFactory = new FtpServerFactory();
     ListenerFactory factory = new ListenerFactory();
 
-    FtpServer server = null;
-    void startServer() throws FtpException {
+    public FtpServer server = null;
+    public void startServer(String address, int port) throws FtpException {
 
-        factory.setPort(21);
-        factory.setServerAddress("localhost");  
-        
-
+        factory.setPort(port);
+        factory.setServerAddress(address);  
+    
         serverFactory.addListener("default", factory.createListener());
-        
-
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(System.getProperty("user.dir") + "/src/main/resources/users.properties"));
         
         UserManager userManager = userManagerFactory.createUserManager();
-        createUser(userManager);
+
         serverFactory.setUserManager(userManager);
         server = serverFactory.createServer();
         server.start();
 
     }
 
-    static void createUser(UserManager userManager) throws FtpException {
+    public void createNewUser(String username, String password, String homePath) throws FtpException {
         var user = new BaseUser();
-        user.setName("user");
-        user.setPassword("user");
-        user.setHomeDirectory("\\");
+        user.setName(username);
+        user.setPassword(password);
+        user.setHomeDirectory(homePath);
         user.setAuthorities(List.of(new WritePermission(), new ConcurrentLoginPermission(10, 10)));
         user.setEnabled(true);
-        userManager.save(user);
-    }
-
-    public boolean downLoadFile(String remotePath, String fileName, String localPath) {
-        return false;
+        serverFactory.getUserManager().save(user);
     }
 }
